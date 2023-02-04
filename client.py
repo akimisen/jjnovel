@@ -33,5 +33,3 @@ headers = {
 print(headers)
 
 driver.quit()
-
-
