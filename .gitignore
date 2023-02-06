@@ -1,6 +1,10 @@
 __pycache__/
 *.pyc
 .git/
+data/
 file/
 log/
 output.txt
+tmp
+session/
+session*.*
