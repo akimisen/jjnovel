@@ -1,16 +1,13 @@
 import scrapy
 
 class Author(scrapy.Item):
-  url=scrapy.Field()
   id=scrapy.Field()
   name=scrapy.Field()
   score=scrapy.Field()
   novels=scrapy.Field()
   flw_count=scrapy.Field()
 
-
 class Novel(scrapy.Item):
-  url=scrapy.Field()
   id=scrapy.Field()
   title=scrapy.Field()
   aid=scrapy.Field()
@@ -23,8 +20,8 @@ class Novel(scrapy.Item):
   is_vip=scrapy.Field()
   is_locked=scrapy.Field()
   word_count=scrapy.Field()
-  created_at=scrapy.Field()
-  updated_at=scrapy.Field()
+  created=scrapy.Field()
+  last_updated=scrapy.Field()
   chpt_count=scrapy.Field()
   score=scrapy.Field()
   flw_count=scrapy.Field()
@@ -34,6 +31,18 @@ class Novel(scrapy.Item):
   rating=scrapy.Field()
   copystatus=scrapy.Field()
   comment_count=scrapy.Field()
+  comments=scrapy.Field()
 
-class Novel(scrapy.Item):
-  pass
+class NewDayListItem(scrapy.Item):
+  date=scrapy.Field(serializer=str)
+  vip_date=scrapy.Field(serializer=str)
+  rank=scrapy.Field()
+  nid=scrapy.Field()
+  title=scrapy.Field()
+  aid=scrapy.Field()
+  author=scrapy.Field()
+  genre=scrapy.Field()
+  yc=scrapy.Field()
+  xx=scrapy.Field()
+  word_count_w=scrapy.Field()
+  tags=scrapy.Field()

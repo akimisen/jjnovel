@@ -30,13 +30,13 @@ def edit_xlsx(filepath,sheetname,data):
       ws.append(r)
   wb.save(filepath)
 
-def xx_from_genre(genre):
+def split_genre(genre):
   if genre.count('-')==3:
-    _xx= genre.split('-')[1]
-    rules = {'言情':'BG','纯爱':'BL'}
-    if _xx in rules:
-      return rules.get(_xx)
-    return None
+    return genre.split('-')[1]
+    # rules = {'言情':'BG','纯爱':'BL'}
+    # if _xx:
+    #   return rules.get(_xx)
+  return None
 
 if __name__=='__main__':
   # aid=2210977

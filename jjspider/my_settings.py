@@ -1,4 +1,4 @@
-HEADERS = {
+headers = {
   'reload':'true',
   'cacheShowed':'true',
   'Referer':'http://android.jjwxc.net?v=277',
@@ -12,10 +12,10 @@ HEADERS = {
   'Accept-Encoding':'gzip'
 }
 
-VERSION_CODE = '277'
+version_code = '277'
 
-URLS = {
-  "novel_info":"http://app-cdn.jjwxc.net/androidapi/novelbasicinfo",
-  "author_info":"http://app.jjwxc.org/androidapi/authorColumn",
-  "newDayList":"http://android.jjwxc.net/bookstore/favObservationByDate"
+base_urls = {
+  "novel":"http://app-cdn.jjwxc.net/androidapi/novelbasicinfo?novelId=",
+  "author":"http://app.jjwxc.org/androidapi/authorColumn?versionCode=%s?authorid=" % version_code,
+  "newdaylist":"http://android.jjwxc.net/bookstore/favObservationByDate?date="
 }
