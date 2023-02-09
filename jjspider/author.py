@@ -7,7 +7,7 @@ class AuthorSpider(Spider):
   name='author'
   custom_settings = {
     'FEEDS':{
-      'authors.csv':{ 
+      'data/authors.csv':{ 
         'format':'csv',
         'overwrite':False,
         'encoding':'gbk'

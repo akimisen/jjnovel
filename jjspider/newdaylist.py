@@ -11,7 +11,7 @@ class NewDayListSpider(Spider):
   name='newdaylist'
   custom_settings = {
     'FEEDS':{
-      'newdaylist_%s.csv':{ 
+      'data/newdaylist_%s.csv':{ 
         'format':'csv',
         'overwrite':False,
         'encoding':'gbk'
