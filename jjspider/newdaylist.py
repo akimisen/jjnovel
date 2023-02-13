@@ -4,24 +4,29 @@ from openpyxl import Workbook
 from my_settings import headers, base_urls
 from pandas import DataFrame as df
 from items import NewDayListItem,Novel
-from datetime import datetime
+from datetime import datetime, timedelta
+from urllib.parse import urlencode
 
 #夹子
 class NewDayListSpider(Spider):
   name='newdaylist'
   custom_settings = {
     'FEEDS':{
-      'data/newdaylist_%s.csv':{ 
+      'data/newdaylist.csv':{ 
         'format':'csv',
-        'overwrite':False,
+        'overwrite':True,
         'encoding':'gbk'
       }
     }
   }
 
   def start_requests(self):
-    request_urls=[base_urls['newdaylist']+datetime.today().strftime('%Y-%m-%d')]
-    return [Request(url=url, headers=headers, callback=self.parse) for url in request_urls]
+    #get newdaylist in one month
+    dates=[
+      {'date':(datetime.today()-timedelta(days=i)).strftime('%Y-%m-%d')} for i in range(30)
+    ]
+    # print(dates)
+    return [Request(url=base_urls['newdaylist']+'?'+urlencode(date), headers=headers, callback=self.parse) for date in dates]
 
   def parse(self, response, **kwargs):
     newdaylist=response.json().get('data')
@@ -45,4 +50,4 @@ class NewDayListSpider(Spider):
       yield item
     
 if __name__=='__main__':
-  print(NewDayListItem.__dict__)
+  print(urlencode({'date':'2002-10-10','version':'277'}))

@@ -4,8 +4,8 @@ class Author(scrapy.Item):
   id=scrapy.Field()
   name=scrapy.Field()
   score=scrapy.Field()
-  novels=scrapy.Field()
   flw_count=scrapy.Field()
+  novels=scrapy.Field(serializer=list)
 
 class Novel(scrapy.Item):
   id=scrapy.Field()

@@ -16,6 +16,6 @@ version_code = '277'
 
 base_urls = {
   "novel":"http://app-cdn.jjwxc.net/androidapi/novelbasicinfo?novelId=",
-  "author":"http://app.jjwxc.org/androidapi/authorColumn?versionCode=%s?authorid=" % version_code,
-  "newdaylist":"http://android.jjwxc.net/bookstore/favObservationByDate?date="
+  "author":"http://app.jjwxc.org/androidapi/authorColumn",
+  "newdaylist":"http://android.jjwxc.net/bookstore/favObservationByDate"
 }

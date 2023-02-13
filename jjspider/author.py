@@ -1,6 +1,6 @@
 from scrapy import Spider, Request
 from datetime import datetime
-from my_settings import base_urls,headers
+from my_settings import base_urls,headers,version_code
 import pandas as pd
 from items import Author
 class AuthorSpider(Spider):
@@ -16,26 +16,29 @@ class AuthorSpider(Spider):
   }
 
   def start_requests(self):
-    data = pd.read_csv('newdaylist.csv', encoding='gbk')
-    request_urls=[base_urls['author']+str(aid) for aid in data['aid']]
-    return [Request(url=url, headers=headers, callback=self.parse) for url in request_urls]
+    df = pd.read_csv('data/newdaylist.csv', encoding='gbk')
+    #待优化
+    return [Request(url=base_urls['author']+'?authorid=%s&versionCode=277' % aid, headers=headers, callback=self.parse) for aid in df['aid']]
 
   def parse(self, response, **kwargs):
-    author=response.json().get('data')
-    rank=0
-    for i in author:
-      rank+=1
-      item=Author()
-      item['id']=i['authorID'],
-      item['name']=i['authorName'],
-      item['novels']=[],
-      for k in i['novellist']:
-        nl = i['novellist'][k]
-        for n in nl:
-          if n['novelsize']!='0' and n['maxChapterId']!='0' and n['islock']=='0':
-            item['novels'].append((n['novelid'],n['novelname']))
-      yield item
-
+    data=response.json()
+    print(data)
+    item=Author()
+    item['id']=data['authorId'],
+    item['name']=data['authorName'],
+    item['score']=data['authorScore']
+    item['flw_count']=data['authorFavoriteCount']
+    item['novels']=list()
+    print('item dict:')
+    print(item.__dict__)
+    for k in data['novellist']:
+      novellistname = data['novellist'][k]
+      for n in novellistname:
+        if n['novelsize']!='0' and n['maxChapterId']!='0' and n['islock']=='0':
+          print((data['authorName'],n['novelid'],n['novelname']))
+          item['novels'].append(n['novelid'])
+    yield item      
+      
 if __name__=='__main__':
   data = pd.read_csv('newdaylist.csv', encoding='gbk')
   urls=['xxx'+str(aid) for aid in data['aid']]
