@@ -2,11 +2,9 @@ __pycache__/
 *.pyc
 .git/
 venv/
-*/data/
 file/
 log/
 output.txt
 tmp
 session/
 session*.*
-*.csv

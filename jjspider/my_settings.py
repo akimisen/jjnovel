@@ -15,7 +15,9 @@ headers = {
 version_code = '277'
 
 base_urls = {
-  "novel":"http://app-cdn.jjwxc.net/androidapi/novelbasicinfo?novelId=",
+  "novel":"http://app-cdn.jjwxc.net/androidapi/novelbasicinfo",
   "author":"http://app.jjwxc.org/androidapi/authorColumn",
   "newdaylist":"http://android.jjwxc.net/bookstore/favObservationByDate"
 }
+
+newdaylist_range = 7

@@ -1,13 +1,27 @@
 import requests, json
-from settings import HEADERS, VERSION_CODE, URLS
+# from my_settings import headers, VERSION_CODE, URLS
 from collections.abc import Iterable
 # from utils import to_xlsx
 
+
+headers = {
+  'reload':'true',
+  'cacheShowed':'true',
+  'Referer':'http://android.jjwxc.net?v=277',
+  'User-Agent':'Mozilla/5.0 (Linux; Android 12; LIO-AN00 Build/HUAWEILIO-AN00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.105 Mobile Safari/537.36/JINJIANG-Android/277(LIO-AN00;Scale/3.0)',
+  'versiontype':'reading',
+  'VERSIONTYPE':'reading',
+  'source':'android',
+  'versionCode':'277',
+  'Version-Code':'277',
+  'Connection':'Keep-Alive',
+  'Accept-Encoding':'gzip'
+}
 class Novel:
   def __init__(self,id) -> None:
     _info = requests.get("http://app-cdn.jjwxc.net/androidapi/novelbasicinfo", params={
         "novelId": str(id)
-    }, headers=HEADERS).json()
+    }, headers=headers).json()
     if _info and _info['novelId']==str(id):
       self.id=str(id)
       self.title=_info['novelName']
@@ -43,7 +57,7 @@ class Novel:
         "novelId": self.id,
         "more": 0,
         "whole": 1
-    }, headers=HEADERS).json().get('chapterlist')
+    }, headers=headers).json().get('chapterlist')
     chapters=[]
     if _chapters and isinstance(_chapters,Iterable):
       for i in _chapters:
@@ -59,10 +73,12 @@ class Novel:
 
 class Author:
   def __init__(self,id) -> None:
-    _info = requests.get("http://app.jjwxc.org/androidapi/authorColumn", params={
+    response=requests.get("http://app.jjwxc.org/androidapi/authorColumn", params={
       "authorid": str(id),
-      "versionCode": VERSION_CODE
-    }, headers=HEADERS).json()
+      "versionCode": '277'
+    }, headers=headers)
+    print(response.url)
+    _info = response.json()
     if _info:
       self.id=str(id)
       self.name=_info['authorName']
@@ -79,13 +95,5 @@ class Author:
     pass
 
 if __name__=='__main__':
-  # a = Author()
-  # n = Novel(7493881)
-  # chapters=n.collect_chapters()
-  # data=[]
-  # data.append(list(chapters[0].keys()))
-  # for chpt in chapters:
-  #   data.append(list(chpt.values()))
-  # if len(data)>0:
-  #   to_xlsx(data,'log/test.xlsx')
-  pass
+  a = Author(2636270)
+  print(a.novels)
