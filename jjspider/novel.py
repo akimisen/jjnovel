@@ -5,33 +5,36 @@ import pandas as pd
 from items import Novel
 from utils import split_genre
 import re
-from html2text import html2text
 
 class NovelSpider(Spider):
   name='novel'
   custom_settings = {
     'FEEDS':{
-      'data/novels_of_author_filled.csv':{ 
+      'data/novels_of_authors_filled.csv':{ 
         'format':'csv',
         'overwrite':False,
-        'encoding':'gbk'
+        'encoding':'utf-8'
       }
     }
   }
 
   def start_requests(self):
-    df = pd.read_csv('data/novels_of_author.csv', encoding='gbk')
-    #待优化
-    return [Request(url=base_urls['novel']+'?novelId=%s' % nid, headers=headers, callback=self.parse, cb_kwargs={'novel_id':nid}) for nid in df['nid']]
+    df = pd.read_csv('data/novels_of_authors-newdaylist_[20230116-20230216].csv', index_col='nid', encoding='utf-8')
+    return (Request(url=base_urls['novel']+'?novelId=%s' % index, headers=headers, callback=self.parse, cb_kwargs={
+      'novel_id':index,
+      'pub_date':novel['pub_date'],
+      'author_id':novel['aid'],
+      'author':novel['name']
+      }) for index,novel in df.iterrows())
 
-  def parse(self, response, novel_id):
+  def parse(self, response, novel_id, pub_date, author_id, author):
     data=response.json()
     print(data)
     item=Novel()
     item['id']=novel_id
     item['title']=data['novelName']
-    item['aid']=data['authorId']
-    item['author']=data['authorName']
+    item['aid']=author_id
+    item['author']=author
     item['intro']=None
     item['logline']=data['novelIntroShort']
     item['genre']=data['novelClass']
@@ -41,7 +44,7 @@ class NovelSpider(Spider):
     item['is_vip']=data['isVip']
     item['is_locked']=data['islock']
     item['wd_count']=data['novelSize']
-    item['created']=None
+    item['created']=pub_date
     item['updated']=data['renewDate']
     item['chpt_count']=data['maxChapterId']
     item['score']=data['novelScore']
@@ -52,9 +55,4 @@ class NovelSpider(Spider):
     item['rating']=data['novelReviewScore']
     item['copystatus']=data['copystatus']
     item['cmt_count']=data['comment_count']
-    yield item      
-      
-if __name__=='__main__':
-  data = pd.read_csv('newdaylist.csv', encoding='gbk')
-  urls=['xxx'+str(aid) for aid in data['aid']]
-  print(urls)
+    yield item
