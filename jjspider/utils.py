@@ -1,46 +1,59 @@
-from openpyxl import Workbook,load_workbook
-from collections.abc import Iterable
-from datetime import datetime
+import re
 
-def to_xlsx(data,savepath,sheetname=None,fields=None):
-  wb=Workbook()
-  if sheetname is None:
-    ws=wb.active
-  elif sheetname in wb.sheetnames:
-    ws=wb[sheetname]
-  else:
-    ws=wb.create_sheet(sheetname)
+def chinese_to_number(chinese_num):
+  """
+  Convert Chinese numerical characters to their corresponding numerical values.
+  """
+  chinese_to_arabic = {
+    '〇': 0,
+    '一': 1,
+    '二': 2,
+    '三': 3,
+    '四': 4,
+    '五': 5,
+    '六': 6,
+    '七': 7,
+    '八': 8,
+    '九': 9,
+  }
+  
+  pattern = re.compile(r'([〇一二三四五六七八九]+)([十百千万亿]?)')
+  result = pattern.findall(chinese_num)
+  number = 0
+  
+  for chinese_digit, chinese_unit in result:
+      digit = chinese_to_arabic[chinese_digit]
+      unit = 1
+      
+      if chinese_unit == '十':
+          unit = 10
+      elif chinese_unit == '百':
+          unit = 100
+      elif chinese_unit == '千':
+          unit = 1000
+      elif chinese_unit == '万':
+          unit = 10000
+      elif chinese_unit == '亿':
+          unit = 100000000
+      
+      number += digit * unit
+  
+  return number
 
-  # insert fields
-  if fields:
-    ws.append(fields)
+def split_yc(novelclass):
+  if novelclass.count('-')==3:
+    return novelclass.split('-')[0]
+  return None
 
-  # iter and insert data
-  if isinstance(data, Iterable) and len(data)>0:
-    for r in data:
-      ws.append(r)
-
-  wb.save(savepath)
-
-def edit_xlsx(filepath,sheetname,data):
-  wb=load_workbook(filepath)
-  ws=wb[sheetname]
-  if isinstance(data, Iterable) and len(data)>0:
-    for r in data:
-      ws.append(r)
-  wb.save(filepath)
-
-def split_genre(genre):
-  if genre.count('-')==3:
-    return genre.split('-')[1]
+def split_xx(novelclass):
+  if novelclass.count('-')==3:
+    return novelclass.split('-')[1]
     # rules = {'言情':'BG','纯爱':'BL'}
     # if _xx:
     #   return rules.get(_xx)
   return None
 
-if __name__=='__main__':
-  # aid=2210977
-  # a=Author(aid)
-  # date=datetime.now().strftime('%Y%m%d')
-  # to_xlsx([],'data/authors_from_newDayList.xlsx',sheetname=date,fields=['id', 'name', 'follower_count', 'score', 'novels'])
-  pass
+def split_era(novelclass):
+  if novelclass.count('-')==3:
+    return novelclass.split('-')[2]
+  return None
