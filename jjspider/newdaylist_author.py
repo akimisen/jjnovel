@@ -21,17 +21,16 @@ class AuthorSpider(Spider):
 
   def start_requests(self):
     #read data from: newdaylist
-    df = pd.read_csv('data/newdaylist-%s.csv' % self.period, drop_duplicates=True, encoding='utf-8')
-    #encode query params
-    param_generator=(
-      {
-        'version':version_code,
-        'authorid': str(aid)
-      } for aid in df['aid'].reset_index(drop=True)
-    )
-    return [Request(url=base_urls['author']+'?'+urlencode(param), headers=headers, callback=self.parse, cb_kwargs={'author_id':param['authorid']}) for param in param_generator]
+    df = pd.read_csv('data/newdaylist-%s.csv' % self.period, index_col='nid', encoding='utf-8')
+    print(df.head)
+    return [Request(url=base_urls['author']+'?'+urlencode(dict(version=version_code,authorid=str(row['aid']))), headers=headers, callback=self.parse, cb_kwargs={
+      'author_id':row['aid'],
+      'ndlist_nid':index,
+      'ndlist_rank':row['rank'],
+      'ndlist_date':row['rank_date']
+      }) for index,row in df.iterrows()]
 
-  def parse(self, response, author_id):
+  def parse(self, response, author_id, ndlist_nid, ndlist_rank, ndlist_date):
     data=response.json()
     # print(data)
     for k in data['novellist']:
@@ -40,9 +39,12 @@ class AuthorSpider(Spider):
         item=NovelOfAuthor(
           aid=author_id,
           name=data['authorName'],
-          score=chinese_to_number(data['authorScore']),
+          score=data['authorScore'],
           follower_count=data['authorFavoriteCount']
         )
+        if n['novelid']==str(ndlist_nid):
+          item['ndlist_rank']=ndlist_rank
+          item['ndlist_date']=ndlist_date
         if n['novelsize']!='0' and n['maxChapterId']!='0' and n['islock']=='0':
           item['nid']=n['novelid']
           item['pub_date']=n['newtopdate']

@@ -14,6 +14,8 @@ class NovelOfAuthor(scrapy.Item):
   follower_count=scrapy.Field()
   nid=scrapy.Field()
   pub_date=scrapy.Field()
+  ndlist_date=scrapy.Field(serializer=str)
+  ndlist_rank=scrapy.Field(serializer=str)
 
 class Novel(scrapy.Item):
   nid=scrapy.Field()
@@ -41,6 +43,8 @@ class Novel(scrapy.Item):
   rating=scrapy.Field()
   copystatus=scrapy.Field()
   comment_count=scrapy.Field()
+  ndlist_date=scrapy.Field(serializer=str)
+  ndlist_rank=scrapy.Field(serializer=str)
 
 class NewDayListItem(scrapy.Item):
   rank_date=scrapy.Field(serializer=str)

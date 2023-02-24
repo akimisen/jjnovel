@@ -20,15 +20,19 @@ class NovelSpider(Spider):
   }
 
   def start_requests(self):
-    df = pd.read_csv('data/newdaylist_author-[20230116-20230216].csv', index_col='nid', encoding='utf-8')
+    df = pd.read_csv('data/newdaylist_author-[20230217-20230223].csv', index_col='nid', encoding='utf-8')
+    df = df.fillna('')
+    # df = df.fillna(value={'ndlist_date':'','ndlist_rank':None})
     return (Request(url=base_urls['novel']+'?novelId=%s' % index, headers=headers, callback=self.parse, cb_kwargs={
       'novel_id':index,
       'pub_date':novel['pub_date'][:10],
       'author_id':novel['aid'],
-      'author':novel['name']
+      'author':novel['name'],
+      'ndlist_rank':novel['ndlist_rank'],
+      'ndlist_date':novel['ndlist_date']
       }) for index,novel in df.iterrows())
 
-  def parse(self, response, novel_id, pub_date, author_id, author):
+  def parse(self, response, novel_id, pub_date, author_id, author, ndlist_rank, ndlist_date):
     data=response.json()
     # print(data)
     if data:
@@ -50,7 +54,7 @@ class NovelSpider(Spider):
       item['created']=pub_date[:10]
       item['updated']=data['renewDate'][:10]
       item['chapter_count']=data['maxChapterId']
-      item['score']=chinese_to_number(data['novelScore'])
+      item['score']=data['novelScore']
       item['like_count']=data['novelbefavoritedcount']
       item['style']=data['novelStyle']
       item['ranking']=data['ranking'].replace('第','').replace('名','')
@@ -58,4 +62,6 @@ class NovelSpider(Spider):
       item['rating']=data['novelReviewScore'].replace('分','')
       item['copystatus']=data['copystatus']
       item['comment_count']=data['comment_count']
+      item['ndlist_rank']=ndlist_rank if ndlist_rank else None,
+      item['ndlist_date']=ndlist_date if ndlist_date else None
       yield item
