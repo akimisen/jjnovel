@@ -21,7 +21,7 @@ class NovelSpider(Spider):
 
   def start_requests(self):
     df = pd.read_csv('data/newdaylist_author-%s.csv' % self.period, encoding='utf-8')
-    df=df.fillna(value={'ndlist_rank':-1,'ndlist_date':'0000/0/0'})
+    df=df.fillna(value={'ndlist_rank':-1,'ndlist_date':'0000-00-00'})
     df['ndlist_rank']=df['ndlist_rank'].astype(int)
     print(df)
     # df = df.fillna(value={'ndlist_date':'','ndlist_rank':None})
