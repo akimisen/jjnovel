@@ -21,7 +21,7 @@ class AuthorSpider(Spider):
 
   def start_requests(self):
     #read data from: newdaylist
-    df = pd.read_csv('data/newdaylist-%s.csv' % self.period, index_col='nid', encoding='utf-8')
+    df = pd.read_csv('data/newdaylist-%s.csv' % self.period, index_col='nid', encoding='utf-8',dtype={'rank':int})
     print(df.head)
     return [Request(url=base_urls['author']+'?'+urlencode(dict(version=version_code,authorid=str(row['aid']))), headers=headers, callback=self.parse, cb_kwargs={
       'author_id':row['aid'],

@@ -20,4 +20,4 @@ base_urls = {
   "newdaylist":"http://android.jjwxc.net/bookstore/favObservationByDate"
 }
 
-newdaylist_range = 7
+newdaylist_range = 31
