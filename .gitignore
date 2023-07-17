@@ -2,7 +2,7 @@ __pycache__/
 *.pyc
 .git/
 venv/
-file/
+jjspider/data/
 log/
 output.txt
 tmp

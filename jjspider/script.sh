@@ -1,4 +1,3 @@
 scrapy runspider newdaylist.py
-scrapy runspider authors.py
-python handlers.py
-scrapy runspider novel.py
+scrapy runspider newdaylist_author.py
+scrapy runspider newdaylist_author_novels.py

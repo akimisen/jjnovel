@@ -64,6 +64,7 @@ class NovelSpider(Spider):
         rating=data['novelReviewScore'].replace('分',''),
         copystatus=data['copystatus'],
         comment_count=data['comment_count'],
+        protagonist=data['protagonist'].replace('主角：',''),
         ndlist_rank=ndlist_rank,
         ndlist_date=ndlist_date
       )

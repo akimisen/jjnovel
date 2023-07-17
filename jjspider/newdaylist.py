@@ -1,6 +1,5 @@
 from scrapy import Spider, Request
 from utils import split_xx, split_era, split_yc
-from openpyxl import Workbook
 from my_settings import headers, base_urls, newdaylist_range, version_code
 from pandas import DataFrame as df
 from items import NewDayListItem,Novel

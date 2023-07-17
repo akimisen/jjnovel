@@ -43,6 +43,7 @@ class Novel(scrapy.Item):
   rating=scrapy.Field()
   copystatus=scrapy.Field()
   comment_count=scrapy.Field()
+  protagonist=scrapy.Field()
   ndlist_date=scrapy.Field(serializer=str)
   ndlist_rank=scrapy.Field()
 
